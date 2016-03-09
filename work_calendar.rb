@@ -35,6 +35,20 @@ class WorkCalendar
     date_before
   end
 
+  def self.days_after(count, date)
+    date_after = date
+
+    count.times do
+      date_after += 1
+
+      while not active?(date_after)
+        date_after += 1
+      end
+    end
+
+    date_after
+  end
+
   def self.weekdays
     DEFAULT_WEEKDAYS
   end

@@ -30,8 +30,18 @@ describe WorkCalendar do
 
     let(:date) { Date.new(2015, 1, 8) }
 
-    it "returns the date before the specified number of 'active' days before the given date" do
+    it "returns the active date before the specified number of 'active' days for the given date" do
       expect(subject).to eq Date.parse('2014-12-31')
+    end
+  end
+
+  describe ".days_after" do
+    subject { described_class.days_after(5, Date.new(2015, 1, 1)) }
+
+    let(:date) { Date.new(2015, 1, 1) }
+
+    it "returns the active date after the specified number of 'active' days for the given date" do
+      expect(subject).to eq Date.parse('2015-01-08')
     end
   end
 end
