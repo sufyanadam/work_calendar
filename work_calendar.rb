@@ -2,6 +2,8 @@ require 'ostruct'
 require 'date'
 
 class WorkCalendar
+  @config = OpenStruct.new({})
+
   DAY_MAP = {
     0 => :sun,
     1 => :mon,
@@ -14,6 +16,16 @@ class WorkCalendar
 
   DEFAULT_WEEKDAYS = %i[mon tue wed thu fri]
   DEFAULT_HOLIDAYS = [Date.new(2015, 1, 1), Date.new(2015, 7, 3), Date.new(2015, 12, 25)]
+
+  def self.configure(&block)
+    yield @config
+
+    @config
+  end
+
+  def self.reset_to_default_config!
+    @config = OpenStruct.new({})
+  end
 
   def self.active?(date)
     return false if holidays.include?(date)
@@ -56,10 +68,10 @@ class WorkCalendar
   end
 
   def self.weekdays
-    DEFAULT_WEEKDAYS
+    @config.weekdays || DEFAULT_WEEKDAYS
   end
 
   def self.holidays
-    DEFAULT_HOLIDAYS
+    @config.holidays || DEFAULT_HOLIDAYS
   end
 end

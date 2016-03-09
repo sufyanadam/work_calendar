@@ -1,6 +1,49 @@
 require_relative '../work_calendar'
 
 describe WorkCalendar do
+  before do
+    described_class.reset_to_default_config!
+  end
+
+  describe ".configure" do
+    subject { described_class.configure(&config_block) }
+
+    let(:custom_weekdays) { %i[sat sun mon tue wed] }
+    let(:custom_holidays) { [Date.new(2016, 1, 18)] }
+
+    context "when provided with a configuration for only weekdays" do
+      let(:config_block) { ->(config) { config.weekdays = custom_weekdays } }
+
+      it "overrides the default weekdays with the ones provided" do
+        subject
+        expect(described_class.weekdays).to eq custom_weekdays
+        expect(described_class.holidays).to eq described_class::DEFAULT_HOLIDAYS
+      end
+    end
+
+    context "when provided with a configuration for only holidays" do
+      let(:config_block) { ->(config) { config.holidays = custom_holidays } }
+
+      it "overrides the default holidays with the ones provided" do
+        subject
+        expect(described_class.weekdays).to eq described_class::DEFAULT_WEEKDAYS
+        expect(described_class.holidays).to eq custom_holidays
+      end
+    end
+
+    context "when provided with a configuration for both weekdays and holidays" do
+      let(:config_block) {
+        ->(config) { config.holidays = custom_holidays; config.weekdays = custom_weekdays }
+      }
+
+      it "overrides both the default weekdays and default holidays with those provided" do
+        subject
+        expect(described_class.weekdays).to eq custom_weekdays
+        expect(described_class.holidays).to eq custom_holidays
+      end
+    end
+  end
+
   describe ".active?" do
     subject { WorkCalendar.active?(date) }
 
