@@ -21,6 +21,20 @@ class WorkCalendar
     weekdays.include?(DAY_MAP[date.wday])
   end
 
+  def self.days_before(count, date)
+    date_before = date
+
+    count.times do
+      date_before -= 1
+
+      while not active?(date_before)
+        date_before -= 1
+      end
+    end
+
+    date_before
+  end
+
   def self.weekdays
     DEFAULT_WEEKDAYS
   end

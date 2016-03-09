@@ -24,4 +24,14 @@ describe WorkCalendar do
       it { is_expected.to be true }
     end
   end
+
+  describe ".days_before" do
+    subject { described_class.days_before(5, date) }
+
+    let(:date) { Date.new(2015, 1, 8) }
+
+    it "returns the date before the specified number of 'active' days before the given date" do
+      expect(subject).to eq Date.parse('2014-12-31')
+    end
+  end
 end
