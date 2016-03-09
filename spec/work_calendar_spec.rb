@@ -45,7 +45,7 @@ describe WorkCalendar do
   end
 
   describe ".active?" do
-    subject { WorkCalendar.active?(date) }
+    subject { described_class.active?(date) }
 
     context "when given a non-active work day" do
       context "such as new year's day" do
