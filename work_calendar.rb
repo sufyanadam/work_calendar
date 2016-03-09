@@ -49,6 +49,12 @@ class WorkCalendar
     date_after
   end
 
+  def self.between(date1, date2)
+    (date1...date2).reject do |date|
+      !active?(date)
+    end
+  end
+
   def self.weekdays
     DEFAULT_WEEKDAYS
   end

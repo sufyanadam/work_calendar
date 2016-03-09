@@ -44,4 +44,29 @@ describe WorkCalendar do
       expect(subject).to eq Date.parse('2015-01-08')
     end
   end
+
+  describe ".between" do
+    subject { described_class.between(date1, date2) }
+
+    let(:date1) { Date.new(2014, 12, 30) }
+    let(:date2) { Date.new(2015,  1, 15) }
+
+    it "returns the active dates between two dates, exclusive of the second date" do
+      expected_result = [
+        Date.parse('2014-12-30'),
+        Date.parse('2014-12-31'),
+        Date.parse('2015-01-02'),
+        Date.parse('2015-01-05'),
+        Date.parse('2015-01-06'),
+        Date.parse('2015-01-07'),
+        Date.parse('2015-01-08'),
+        Date.parse('2015-01-09'),
+        Date.parse('2015-01-12'),
+        Date.parse('2015-01-13'),
+        Date.parse('2015-01-14')
+      ]
+
+      expect(subject).to eq expected_result
+    end
+  end
 end
