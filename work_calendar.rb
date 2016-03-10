@@ -34,37 +34,30 @@ class WorkCalendar
   end
 
   def self.days_before(count, date)
-    date_before = date
-
-    count.times do
-      date_before -= 1
-
-      while not active?(date_before)
-        date_before -= 1
-      end
-    end
-
-    date_before
+    count_days_from(date, count, 'back')
   end
 
   def self.days_after(count, date)
-    date_after = date
+    count_days_from(date, count, 'forward')
+  end
+
+  private_class_method def self.count_days_from(date, count, direction)
+    new_date = date
+    arithmetic_operation = (direction == 'back' ? :- : :+)
 
     count.times do
-      date_after += 1
+      new_date = new_date.send(arithmetic_operation, 1)
 
-      while not active?(date_after)
-        date_after += 1
+      while not active?(new_date)
+        new_date = new_date.send(arithmetic_operation, 1)
       end
     end
 
-    date_after
+    new_date
   end
 
   def self.between(date1, date2)
-    (date1...date2).reject do |date|
-      !active?(date)
-    end
+    (date1...date2).reject { |date| !active?(date) }
   end
 
   def self.weekdays
