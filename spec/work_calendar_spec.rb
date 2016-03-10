@@ -59,6 +59,42 @@ describe WorkCalendar do
 
         it { is_expected.to be false }
       end
+
+      context "when the holiday and weekday configuration is overridden" do
+        let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
+        let(:custom_holidays) { [Date.new(2016, 1, 18)] }
+
+        before do
+          described_class.configure do |c|
+            c.weekdays = custom_weekdays
+            c.holidays = custom_holidays
+          end
+        end
+
+        context "when provided with a holiday date" do
+          let(:date) { Date.new(2016, 1, 18) }
+
+          it { is_expected.to be false }
+        end
+
+        context "when provided with a non-active date (a friday)" do
+          let(:date) { Date.new(2016, 3, 11) }
+
+          it { is_expected.to be false }
+        end
+
+        context "when provided with a non-active date from the DEFAULT configuration" do
+          let(:date) { Date.new(2015, 1, 1) }
+
+          it { is_expected.to be true }
+        end
+
+        context "when provided with an active date" do
+          let(:date) { Date.new(2015, 6, 17) }
+
+          it { is_expected.to be true }
+        end
+      end
     end
 
     context "when given an active work day" do
@@ -76,6 +112,20 @@ describe WorkCalendar do
     it "returns the active date before the specified number of 'active' days for the given date" do
       expect(subject).to eq Date.parse('2014-12-31')
     end
+
+    context "when the holiday and weekday configuration is overridden" do
+      let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
+      let(:custom_holidays) { [Date.new(2016, 1, 18)] }
+
+      before do
+        described_class.configure do |c|
+          c.weekdays = custom_weekdays
+          c.holidays = custom_holidays
+        end
+      end
+
+      it { is_expected.to eq Date.parse('2015-1-3') }
+    end
   end
 
   describe ".days_after" do
@@ -85,6 +135,20 @@ describe WorkCalendar do
 
     it "returns the active date after the specified number of 'active' days for the given date" do
       expect(subject).to eq Date.parse('2015-01-08')
+    end
+
+    context "when the holiday and weekday configuration is overridden" do
+      let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
+      let(:custom_holidays) { [Date.new(2016, 1, 18)] }
+
+      before do
+        described_class.configure do |c|
+          c.weekdays = custom_weekdays
+          c.holidays = custom_holidays
+        end
+      end
+
+      it { is_expected.to eq Date.parse('2015-1-7') }
     end
   end
 
@@ -110,6 +174,38 @@ describe WorkCalendar do
       ]
 
       expect(subject).to eq expected_result
+    end
+
+    context "when the holiday and weekday configuration is overridden" do
+      let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
+      let(:custom_holidays) { [Date.new(2015, 1, 10)] }
+
+      before do
+        described_class.configure do |c|
+          c.weekdays = custom_weekdays
+          c.holidays = custom_holidays
+        end
+      end
+
+      let(:expected_result) do
+        [
+          Date.parse('2014-12-30'),
+          Date.parse('2014-12-31'),
+          Date.parse('2015-01-01'),
+          Date.parse('2015-01-03'),
+          Date.parse('2015-01-04'),
+          Date.parse('2015-01-05'),
+          Date.parse('2015-01-06'),
+          Date.parse('2015-01-07'),
+          Date.parse('2015-01-08'),
+          Date.parse('2015-01-11'),
+          Date.parse('2015-01-12'),
+          Date.parse('2015-01-13'),
+          Date.parse('2015-01-14')
+        ]
+      end
+
+      it { is_expected.to eq expected_result }
     end
   end
 end
