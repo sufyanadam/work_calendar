@@ -33,6 +33,18 @@ class WorkCalendar
     count_days_from(date, count, 'forward')
   end
 
+  def self.between(date1, date2)
+    (date1...date2).reject { |date| !active?(date) }
+  end
+
+  def self.weekdays
+    @config.weekdays || DEFAULT_WEEKDAYS
+  end
+
+  def self.holidays
+    @config.holidays || DEFAULT_HOLIDAYS
+  end
+
   private_class_method def self.count_days_from(date, count, direction)
     new_date = date
     arithmetic_operation = (direction == 'back' ? :- : :+)
@@ -46,17 +58,5 @@ class WorkCalendar
     end
 
     new_date
-  end
-
-  def self.between(date1, date2)
-    (date1...date2).reject { |date| !active?(date) }
-  end
-
-  def self.weekdays
-    @config.weekdays || DEFAULT_WEEKDAYS
-  end
-
-  def self.holidays
-    @config.holidays || DEFAULT_HOLIDAYS
   end
 end
