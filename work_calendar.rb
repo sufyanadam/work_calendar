@@ -53,7 +53,7 @@ class WorkCalendar
       new_date = new_date.send(arithmetic_operation, 1)
 
       while not active?(new_date)
-        new_date = new_date.send(arithmetic_operation, 1)
+        new_date = new_date.public_send(arithmetic_operation, 1)
       end
     end
 
