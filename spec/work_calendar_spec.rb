@@ -59,48 +59,48 @@ describe WorkCalendar do
 
         it { is_expected.to be false }
       end
-
-      context "when the holiday and weekday configuration is overridden" do
-        let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
-        let(:custom_holidays) { [Date.new(2016, 1, 18)] }
-
-        before do
-          described_class.configure do |c|
-            c.weekdays = custom_weekdays
-            c.holidays = custom_holidays
-          end
-        end
-
-        context "when provided with a holiday date" do
-          let(:date) { Date.new(2016, 1, 18) }
-
-          it { is_expected.to be false }
-        end
-
-        context "when provided with a non-active date (a friday)" do
-          let(:date) { Date.new(2016, 3, 11) }
-
-          it { is_expected.to be false }
-        end
-
-        context "when provided with a non-active date from the DEFAULT configuration" do
-          let(:date) { Date.new(2015, 1, 1) }
-
-          it { is_expected.to be true }
-        end
-
-        context "when provided with an active date" do
-          let(:date) { Date.new(2015, 6, 17) }
-
-          it { is_expected.to be true }
-        end
-      end
     end
 
     context "when given an active work day" do
       let(:date) { Date.new(2015, 1, 2) }
 
       it { is_expected.to be true }
+    end
+
+    context "when the holiday and weekday configuration is overridden" do
+      let(:custom_weekdays) { %i[sat sun mon tue wed thu] }
+      let(:custom_holidays) { [Date.new(2016, 1, 18)] }
+
+      before do
+        described_class.configure do |c|
+          c.weekdays = custom_weekdays
+          c.holidays = custom_holidays
+        end
+      end
+
+      context "when provided with a holiday date" do
+        let(:date) { Date.new(2016, 1, 18) }
+
+        it { is_expected.to be false }
+      end
+
+      context "when provided with a non-active date (a friday)" do
+        let(:date) { Date.new(2016, 3, 11) }
+
+        it { is_expected.to be false }
+      end
+
+      context "when provided with a non-active date from the DEFAULT configuration" do
+        let(:date) { Date.new(2015, 1, 1) }
+
+        it { is_expected.to be true }
+      end
+
+      context "when provided with an active date" do
+        let(:date) { Date.new(2015, 6, 17) }
+
+        it { is_expected.to be true }
+      end
     end
   end
 
