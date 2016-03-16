@@ -7,7 +7,7 @@ class WorkCalendar
   DAY_MAP = { 0 => :sun, 1 => :mon, 2 => :tue, 3 => :wed, 4 => :thu, 5 => :fri, 6 => :sat }
 
   DEFAULT_WEEKDAYS = %i[mon tue wed thu fri]
-  DEFAULT_HOLIDAYS = [Date.new(2015, 1, 1), Date.new(2015, 7, 3), Date.new(2015, 12, 25)]
+  DEFAULT_HOLIDAYS = ['1/1', '7/4', '12/25']
 
   def self.configure(&block)
     yield @config
@@ -42,7 +42,11 @@ class WorkCalendar
   end
 
   def self.holidays
-    @config.holidays || DEFAULT_HOLIDAYS
+    @config.holidays || default_holidays
+  end
+
+  def self.default_holidays
+    DEFAULT_HOLIDAYS.map { |h| month, day = h.split('/').map(&:to_i); Date.new(Date.today.year, month, day) }
   end
 
   private_class_method def self.count_days_from(date, count, direction)

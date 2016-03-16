@@ -17,7 +17,7 @@ describe WorkCalendar do
       it "overrides the default weekdays with the ones provided" do
         subject
         expect(described_class.weekdays).to eq custom_weekdays
-        expect(described_class.holidays).to eq described_class::DEFAULT_HOLIDAYS
+        expect(described_class.holidays).to eq described_class.default_holidays
       end
     end
 
@@ -49,13 +49,13 @@ describe WorkCalendar do
 
     context "when given a non-active work day" do
       context "such as new year's day" do
-        let(:date) { Date.new(2015, 1, 1) }
+        let(:date) { Date.new(Date.today.year, 1, 1) }
 
         it { is_expected.to be false }
       end
 
-      context "such as 2015-07-03" do
-        let(:date) { Date.new(2015, 7, 3) }
+      context "such as independence day" do
+        let(:date) { Date.new(Date.today.year, 7, 4) }
 
         it { is_expected.to be false }
       end
@@ -107,10 +107,10 @@ describe WorkCalendar do
   describe ".days_before" do
     subject { described_class.days_before(5, date) }
 
-    let(:date) { Date.new(2015, 1, 8) }
+    let(:date) { Date.new(Date.today.year, 1, 8) }
 
     it "returns the active date before the specified number of 'active' days for the given date" do
-      expect(subject).to eq Date.parse('2014-12-31')
+      expect(subject).to eq Date.parse('2015-12-31')
     end
 
     context "when the holiday and weekday configuration is overridden" do
@@ -124,7 +124,7 @@ describe WorkCalendar do
         end
       end
 
-      it { is_expected.to eq Date.parse('2015-1-3') }
+      it { is_expected.to eq Date.parse('2016-1-3') }
     end
   end
 
